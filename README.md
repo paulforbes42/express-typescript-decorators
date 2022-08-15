@@ -1,12 +1,18 @@
 # Express TypeScript Decorators
 
-Simply create Express APIs with TypeScript that are naturally documented in Swagger.
+Create Express APIs using TypeScript decorators that naturally generate OpenAPI documentation to describe your API.
 
-* Create Classes that represent Express routes and APIs
-* Augment the classes with TypeScript decorators such as `@Controller`, `@HttpGet` and `@Middleware`
-* Describe your API `OpenAPI.json` to define a title and description of the system
+## Overview
+
+* Create classes whose methods represent Express routes
+* Decorate your class to add additional Express functionality i.e. `@Controller()`, `@HttpGet`, `@Middleware` etc.
+* Further Describe your API with a title and description in `OpenAPI.json`
 * Automatically generate OpenAPI JSON documentation
-* Link your API to Swagger for rich API documentation tools
+* Link your API documentation to Swagger for rich API documentation tools
+
+# Example Application
+
+Consider the following three examples to see how any Express application can become a fully documented API.
 
 ## Example Express Application _before_ using Express TypeScript Decorators
 
@@ -221,93 +227,507 @@ Swagger UI for an always up-to-date API documentation site.
 
 ## Decorators
 
-### Http Verbs
+### Controller
 
-* `@HttpDelete(path: string, description?: string)` Convert to a http _delete_ route.
-** `path` represents the URL to access this resource.  
-** `description` will be included in your OpenAPI documentation.
+▸ **@Controller**<`T`\>(`path?`, `tag?`, `description?`)
 
-* `@HttpGet(path: string, description?: string)` Convert to a http _get_ route.  
-** `path` represents the URL to access this resource.  
-** `description` will be included in your OpenAPI documentation.
+Class decorator used for classes that represent a grouping of Express routes
 
-* `@HttpPost(path: string, description?: string)` Convert to a http _post_ route.  
-** `path` represents the URL to access this resource.  
-** `description` will be included in your OpenAPI documentation.
-
-* `@HttpPut(path: string, description?: string)` Convert to a http _put_ route.  
-** `path` represents the URL to access this resource.  
-** `description` will be included in your OpenAPI documentation.
-
-### Express Functionality
-
-* `@Controller(path?: string, tag?: string)` Decorator for your controller class.
-** `path` optional url to prefix onto all of the routes within your class
-** `tag` optional tag to group the routes in your class with in your OpenAPI documentation
-
-* `@Middleware(middleware: Function[])` Array of middleware functions to associate with a route.  
-** `middleware` Each function's signature should match `(req: Request, res: Response, next?: NextFunction) => void`
-
-* `@Query(key: string, summary?: string, exampleValue?: string, required?: boolean, deprecated?: boolean)` Parameter Decorator to inject a value from the `Request.query` (query string of the url) into the route as a parameter.
-** `key` is the name of the parameter from the query string in the url.  
-** `summary` allows a textual description of the parameter.  
-** `exampleValue` demonstrates the expected type of data.  
-** `required` can be set when a specific parameter of the query string in the url must be provided.
-** `deprecated` indicate if this parameter is deprecated
-
-* `@Request()` Parameter Decorator to inject Express Request object into a route.  Provides type `ExpressRequest`.
-
-* `@Response()` Parameter Decorator to inject Express Response object into a route.  Provides type `ExpressResponse`.
-
-* `@RequestParam(key: string, summary?: string, exampleValue?: string, required?: boolean)` Parameter Decorator to inject a value from the `Request.body` into the route as parameter. 
-** `key` is the name of the parameter from the request's payload.  
-** `summary` allows a textual description of the parameter.  
-** `exampleValue` demonstrates the expected type of data.  
-** `required` can be set when a specific parameter of the request's payload must be provided.
-
-### OpenAPI Documentation Decorators
-
-* `@HttpResponse(statusCode: number, description?: string)` Document status codes that can be returned by this route. Provide multiple `@HttpResponse` decorators per route to declare multiple possible http status codes that can be returned.
-** `statusCode` is the http status code to be documented.  
-** `description` optionally can describe the scenario where this status code will be returned.  
-
-* `@RequestBody(contentType: string, description?: string, required?: boolean)` Document the request payload expected by this route.  
-** `contentType` represents the expected content type header expected i.e. `application/json`.  
-** `description` allows for describing the structure or purpose of the payload.  
-** `required` documents if this payload is expected.
-
-## Utility Methods
-
-* `useController(controller: Class)` Converts a decorated controller into an `express.Router` to be associated with the Express Application.
-
-* `getOpenAPIJson()` Get an Express route that will return OpenAPI documentation in JSON format.
-
-* `setOpenAPIJsonPath(path: string)` Redefine the file path to `OpenAPI.json`.  Default `<rootdir>/OpenAPI.json`.
-** `path` file path to OpenAPI.json
-
-* `setOpenAPIInfo(info: OpenAPIInfo)` Further describe your API in the generated OpenAPI documentation.
+**`Example`**
 
 ```
-type OpenAPIInfo = {
-    title: string
-    version: string
-    summary?: string
-    description?: string
-    termsOfService?: string
-    contact?: OpenAPIContact
-    license?: OpenAPILicense
-};
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+ ...
+}
 ```
 
-* `setOpenAPITags(tags: string[] | OpenAPITag[])` Further describe your API in the generated OpenAPI documentation.
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `path?` | `string` | URL path to prefix all Express routes within the class |
+| `tag?` | `string` | OpenAPI grouping for all Express routes within the class |
+| `description?` | `string` | OpenAPI description that will be associated with the tag for this class |
+
+___
+
+### HttpDelete
+
+▸ **@HttpDelete**<`T`\>(`path`, `description?`)
+
+Method decorator that indicates the method should be accessible through an HTTP Delete operation
+
+**`Example`**
 
 ```
-export type OpenAPITag = {
-    name: string
-    description?: string
-    externalDocs?: OpenAPIExternalDocumentation
-};
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpDelete('/user', 'Mark a user as deleted')
+ async deleteUser(
+   @RequestParam('userId') userId: number, 
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
 ```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `path` | `string` | URL which this method should be access through as a HTTP Delete operation |
+| `description?` | `string` | Description of this route to be included in the OpenAPI documentation |
+
+___
+
+### HttpGet
+
+▸ **@HttpGet**<`T`\>(`path`, `description?`)
+
+Method decorator that indicates the method should be accessible through an HTTP Get operation
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpGet('/user', 'List users in the system')
+ async listUsers(
+   @Query('search') search: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `path` | `string` | URL which this method should be access through as a HTTP Get operation |
+| `description?` | `string` | Description of this route to be included in the OpenAPI documentation |
+
+___
+
+### HttpPost
+
+▸ **@HttpPost**<`T`\>(`path`, `description?`)
+
+Method decorator that indicates the method should be accessible through an HTTP Post operation
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpPost('/user', 'Create a new user')
+ async createUser(
+   @RequestParam('username') username: string,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `path` | `string` | URL which this method should be access through as a HTTP Post operation |
+| `description?` | `string` | Description of this route to be included in the OpenAPI documentation |
+
+___
+
+### HttpPut
+
+▸ **@HttpPut**<`T`\>(`path`, `description?`)
+
+Method decorator that indicates the method should be accessible through an HTTP Put operation
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpPut('/user/:userId', 'Update an existing user')
+ async createUser(
+   @UrlParam('userId') userId: number,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `path` | `string` | URL which this method should be access through as a HTTP Put operation |
+| `description?` | `string` | Description of this route to be included in the OpenAPI documentation |
+
+___
+
+### HttpResponse
+
+▸ **@HttpResponse**<`T`\>(`statusCode`, `description`)
+
+Method decorator which describes an HTTP status code that can be returned by this Express route.
+This decorator can be applied multiple times to a single Express route to describe all status codes produced by this route.
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpResponse(201, 'New user record created')
+ @HttpResponse(400, 'Missing required data')
+ @HttpPost('/user', 'Create a new user')
+ async createUser(
+   @RequestParam('username') username: string,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `statusCode` | `number` | HTTP status code |
+| `description` | `string` | Description of the scenario in which this HTTP status code will be produced |
+
+___
+
+### Middleware
+
+▸ **@Middleware**<`T`\>(`middleware`)
+
+Method decorator which accepts an array of Express middleware callback functions to run prior to the Express route being executed
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @Middleware([verifyAuthenticated, checkAdminPermissions])
+ @HttpPost('/user', 'Create a new user')
+ async createUser(
+   @RequestParam('username') username: string,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `middleware` | (`req`: `Request`<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`<`string`, `any`\>\>, `res`: `Response`<`any`, `Record`<`string`, `any`\>\>, `next?`: `NextFunction`) => `void`[] | Array of Express middleware callback functions |
+
+___
+
+### Query
+
+▸ **@Query**<`T`\>(`key`, `summary?`, `exampleValue?`, `required?`, `deprecated?`)
+
+Parameter decorator which defines a query string parameter to be provided to the Express route
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpGet('/user', 'List users in the system')
+ async listUsers(
+   @Query('search', 'Search string to lookup users by first or last name', 'Paul', false, false) search: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `string` | name of parameter in the query string |
+| `summary?` | `string` | description of the parameter for OpenAPI documentation |
+| `exampleValue?` | `string` \| `number` \| `boolean` | example of expected data |
+| `required?` | `boolean` | indicate if this parameter is required |
+| `deprecated?` | `boolean` | indicate if this parameter is deprecated |
+
+___
+
+### Request
+
+▸ **@Request**<`T`\>()
+
+Parameter decorator which injects the Express Request object into the decorated Express route
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpGet('/user', 'List users in the system')
+ async listUsers(
+   @Query('search') search: string,
+   @Request() req: ExpressRequest,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `target` | `T` |
+| `propertyKey` | `string` |
+| `parameterIndex` | `number` |
+
+___
+
+### RequestBody
+
+▸ **@RequestBody**<`T`\>(`contentType`, `description?`, `required?`)
+
+Method decorator to describe the expected request payload
+
+**`Example`**
+
+```
+ * @Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @RequestBody('application/json', 'User information for new user record', true) 
+ @HttpPost('/user', 'Create a new user')
+ async createUser(
+   @RequestParam('username') username: string,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `contentType` | `string` | content type of payload i.e. "application/json" |
+| `description?` | `string` | description of the payload for OpenAPI documentation |
+| `required?` | `boolean` | indicate if the payload is required |
+
+___
+
+### RequestParam
+
+▸ **@RequestParam**<`T`\>(`key`, `summary?`, `exampleValue?`, `required?`)
+
+Parameter decorator which defines a request body parameter to be provided to the Express route
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpPut('/user/:userId', 'Update an existing user')
+ async createUser(
+   @UrlParam('userId') userId: number,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `string` | name of parameter in request body |
+| `summary?` | `string` | description of the parameter for OpenAPI documentation |
+| `exampleValue?` | `string` \| `number` \| `boolean` | example of expected data |
+| `required?` | `boolean` | indicate if this parameter is required |
+
+___
+
+### Response
+
+▸ **@Response**<`T`\>()
+
+Parameter decorator which injects the Express Response object into the decorated route
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpGet('/user', 'List users in the system')
+ async listUsers(
+   @Query('search') search: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+___
+
+### UrlParam
+
+▸ **@UrlParam**<`T`\>(`key`, `summary?`, `exampleValue?`)
+
+Parameter decorator which defines a url parameter to be provided to the Express route
+
+**`Example`**
+
+```
+@Controller('/api', 'User', 'User Management Routes')
+class User {
+
+ @HttpPut('/user/:userId', 'Update an existing user')
+ async createUser(
+   @UrlParam('userId') userId: number,
+   @RequestParam('password') password: string,
+   @Response() res: ExpressResponse
+ ): Promise<void> { 
+   ... 
+ }
+}
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `string` | name of parameter in request body |
+| `summary?` | `string` | description of the parameter for OpenAPI documentation |
+| `exampleValue?` | `string` \| `number` \| `boolean` | example of expected data |
+
+___
+
+## Functions
+
+### getOpenAPIJson
+
+▸ **getOpenAPIJson**(): (`req`: `Request`, `res`: `Response`) => `void`
+
+Return an Express route which will render the OpenAPI documentation for the API in JSON format.
+
+**`Example`**
+
+```
+app.use('/api-docs', getOpenAPIJson());
+```
+
+#### Returns
+
+`fn`
+
+Get API method
+
+▸ (`req`, `res`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `req` | `Request` |
+| `res` | `Response` |
+
+##### Returns
+
+`void`
+
+___
+
+### setOpenAPIInfo
+
+▸ **setOpenAPIInfo**(`info`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `info` | `OpenAPIInfo` |
+
+#### Returns
+
+`void`
+
+___
+
+### setOpenAPIJsonPath
+
+▸ **setOpenAPIJsonPath**(`path`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `path` | `string` |
+
+#### Returns
+
+`void`
+
+___
+
+### useController
+
+▸ **useController**(`controller`): `Router`
+
+Utility Method to map a controller class be used by Express
+
+**`Example`**
+
+```
+app.use('/', useController(UserController));
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `controller` | `any` | Controller class |
+
+#### Returns
+
+`Router`
+
+Express Router object with associated routes
 
 # OpenAPI.json
 
@@ -360,7 +780,7 @@ export type OpenAPI = {
 
 # Development
 
-NPM scripts to assist in development:
+NPM scripts to assist in development of this project.
 
 * `npm run build` clean up branch, run unit tests and lint to prepare for PR
 * `npm run clean` remove the `dist` directory
