@@ -19,6 +19,9 @@ import HttpStatus from '../types/http-status';
 import HttpVerb from '../types/http-verb';
 import RequestParameterMetadata from '../types/request-parameter-metadata';
 
+/**
+ * Internal class to manage and generate OpenAPI documentation.
+ */
 class OpenAPIService {
     protected static openAPIJsonPath = '';
     protected static openAPIData: OpenAPI = {

@@ -4,8 +4,8 @@
   "description": "Express TypeScript Decorators",
   "main": "index.js",
   "scripts": {
-    "build": "npm run lint && npm run clean && tsc && npm run test",
-    "clean": "rimraf dist",
+    "build": "npm run lint && npm run clean && tsc && npm run test && npm run docs",
+    "clean": "rimraf dist && rimraf docs",
     "dev": "tsc --watch",
     "docs": "typedoc",
     "lint": "eslint -c .eslintrc.json src/**/*.ts",
