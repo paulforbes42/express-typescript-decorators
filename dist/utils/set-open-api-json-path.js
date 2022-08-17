@@ -4,6 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const open_api_1 = __importDefault(require("../services/open-api"));
+/**
+ * Set the filepath where to location OpenAPI.json
+ *
+ * @param path filepath for json file with OpenAPI information
+ */
 function setOpenAPIJsonPath(path) {
     open_api_1.default.setOpenAPIJsonPath(path);
 }

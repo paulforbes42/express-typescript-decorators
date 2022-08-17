@@ -4,6 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const open_api_1 = __importDefault(require("../services/open-api"));
+/**
+ * Set the info object for OpenAPI documentation.  Recommended to use OpenAPI.json instead.
+ *
+ * @param info
+ */
 function setOpenAPIInfo(info) {
     open_api_1.default.setOpenAPIInfo(info);
 }

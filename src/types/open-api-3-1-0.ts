@@ -209,7 +209,7 @@ export type OpenAPISchema = {
 
 };
 
-type OpenAPISchemaProperty = {
+export type OpenAPISchemaProperty = {
     type: string
     format?: string
     minimum?: number

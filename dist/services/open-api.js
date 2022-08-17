@@ -29,6 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importStar(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const open_api_3_1_0_1 = require("../types/open-api-3-1-0");
+/**
+ * Internal class to manage and generate OpenAPI documentation.
+ */
 class OpenAPIService {
     static getOpenAPIPath(path) {
         const openAPIData = this.openAPIData;
