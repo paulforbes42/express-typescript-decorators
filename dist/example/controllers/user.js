@@ -21,7 +21,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const __1 = require("../..");
+const src_1 = require("../../src");
 let UserController = class UserController {
     createUser(email, password, firstName, lastName, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,33 +33,33 @@ let UserController = class UserController {
     }
 };
 __decorate([
-    (0, __1.RequestBody)('application/json', 'User information about the user to be added to the system', true),
-    (0, __1.HttpResponse)(201, 'User Created'),
-    (0, __1.HttpResponse)(400, 'Invalid Request Data'),
-    (0, __1.HttpResponse)(403, 'Validation Failed'),
-    (0, __1.HttpResponse)(409, 'Email Aready Exists'),
-    (0, __1.HttpPost)('/', 'Create a new user'),
-    __param(0, (0, __1.RequestParam)('email', 'User\'s email address', 'user@example.com', true)),
-    __param(1, (0, __1.RequestParam)('password', 'Valid password', 'L1m1t3dAcc355', true)),
-    __param(2, (0, __1.RequestParam)('firstName', 'User\'s first name', 'Paul', true)),
-    __param(3, (0, __1.RequestParam)('lastName', 'User\'s last name', 'Forbes', true)),
-    __param(4, (0, __1.Response)()),
+    (0, src_1.RequestBody)('application/json', 'User information about the user to be added to the system', true),
+    (0, src_1.HttpResponse)(201, 'User Created'),
+    (0, src_1.HttpResponse)(400, 'Invalid Request Data'),
+    (0, src_1.HttpResponse)(403, 'Validation Failed'),
+    (0, src_1.HttpResponse)(409, 'Email Aready Exists'),
+    (0, src_1.HttpPost)('/', 'Create a new user'),
+    __param(0, (0, src_1.RequestParam)('email', 'User\'s email address', 'user@example.com', true)),
+    __param(1, (0, src_1.RequestParam)('password', 'Valid password', 'L1m1t3dAcc355', true)),
+    __param(2, (0, src_1.RequestParam)('firstName', 'User\'s first name', 'Paul', true)),
+    __param(3, (0, src_1.RequestParam)('lastName', 'User\'s last name', 'Forbes', true)),
+    __param(4, (0, src_1.Response)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, String, String, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "createUser", null);
 __decorate([
-    (0, __1.HttpResponse)(200, 'Success'),
-    (0, __1.HttpResponse)(500, 'Internal Error'),
-    (0, __1.HttpGet)('/', 'List users in the system'),
-    __param(0, (0, __1.Query)('active', 'Filter users by active status', 'true', false)),
-    __param(1, (0, __1.Query)('name', 'Search users by first or last name', 'Forbes', false)),
-    __param(2, (0, __1.Response)()),
+    (0, src_1.HttpResponse)(200, 'Success'),
+    (0, src_1.HttpResponse)(500, 'Internal Error'),
+    (0, src_1.HttpGet)('/', 'List users in the system'),
+    __param(0, (0, src_1.Query)('active', 'Filter users by active status', 'true', false)),
+    __param(1, (0, src_1.Query)('name', 'Search users by first or last name', 'Forbes', false)),
+    __param(2, (0, src_1.Response)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Boolean, String, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "listUsers", null);
 UserController = __decorate([
-    (0, __1.Controller)('/user', 'user', 'Create and manage users in the system')
+    (0, src_1.Controller)('/user', 'user', 'Create and manage users in the system')
 ], UserController);
 exports.default = UserController;

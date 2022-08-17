@@ -4,7 +4,7 @@ import {
     HttpResponse,
     Response,
     ExpressResponse,
-} from '../../index';
+} from '../../src';
 
 @Controller()
 class HelloWorldController {

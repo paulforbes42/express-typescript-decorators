@@ -21,7 +21,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../../index");
+const src_1 = require("../../src");
 let HelloWorldController = class HelloWorldController {
     constructor() {
         this.text = 'Hello, World!';
@@ -38,22 +38,22 @@ let HelloWorldController = class HelloWorldController {
     }
 };
 __decorate([
-    (0, index_1.HttpGet)('/', 'Get a Hello World'),
-    (0, index_1.HttpResponse)(200, 'Success'),
-    __param(0, (0, index_1.Response)()),
+    (0, src_1.HttpGet)('/', 'Get a Hello World'),
+    (0, src_1.HttpResponse)(200, 'Success'),
+    __param(0, (0, src_1.Response)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], HelloWorldController.prototype, "helloWorld", null);
 __decorate([
-    (0, index_1.HttpGet)('/second', 'Get another Hello World'),
-    (0, index_1.HttpResponse)(200, 'Success'),
-    __param(0, (0, index_1.Response)()),
+    (0, src_1.HttpGet)('/second', 'Get another Hello World'),
+    (0, src_1.HttpResponse)(200, 'Success'),
+    __param(0, (0, src_1.Response)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], HelloWorldController.prototype, "helloWorld2", null);
 HelloWorldController = __decorate([
-    (0, index_1.Controller)()
+    (0, src_1.Controller)()
 ], HelloWorldController);
 exports.default = HelloWorldController;

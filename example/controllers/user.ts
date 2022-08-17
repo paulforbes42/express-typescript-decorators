@@ -8,7 +8,7 @@ import {
     RequestParam,
     Response,
     ExpressResponse,
-} from '../..';
+} from '../../src';
 
 @Controller('/user', 'user', 'Create and manage users in the system')
 class UserController {
