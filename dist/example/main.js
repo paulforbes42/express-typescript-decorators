@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const hello_world_1 = __importDefault(require("./controllers/hello-world"));
 const user_1 = __importDefault(require("./controllers/user"));
-const __1 = require("../");
+const src_1 = require("../src");
 const cors_1 = __importDefault(require("cors"));
 /*
 setOpenAPIInfo({
@@ -26,7 +26,7 @@ setOpenAPIInfo({
 });
 */
 const app = (0, express_1.default)();
-app.use('/', (0, __1.useController)(hello_world_1.default));
-app.use('/api', (0, __1.useController)(user_1.default));
-app.get('/api-docs', (0, cors_1.default)(), (0, __1.getOpenAPIJson)());
+app.use('/', (0, src_1.useController)(hello_world_1.default));
+app.use('/api', (0, src_1.useController)(user_1.default));
+app.get('/api-docs', (0, cors_1.default)(), (0, src_1.getOpenAPIJson)());
 app.listen(4000, () => console.log('Express Application Started'));

@@ -12,6 +12,8 @@ Create Express APIs using TypeScript decorators that naturally generate OpenAPI 
 * Automatically generate OpenAPI JSON documentation
 * Link your API documentation to Swagger for rich API documentation tools
 
+[Typedoc Documentation](https://paulforbes42.github.io/express-typescript-decorators/)
+
 # Example Application
 
 Consider the following three examples to see how any Express application can become a fully documented API.

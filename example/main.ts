@@ -5,7 +5,7 @@ import {
 //    setOpenAPIInfo,
     getOpenAPIJson,
     useController
-} from '../'
+} from '../src'
 
 import cors from 'cors';
 
