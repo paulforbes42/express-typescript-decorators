@@ -2,14 +2,20 @@
   "name": "express-typescript-decorators",
   "version": "0.1.0",
   "description": "Express TypeScript Decorators",
-  "main": "index.js",
+  "homepage": "https://github.com/paulforbes42/express-typescript-decorators",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paulforbes42/express-typescript-decorators.git"
+  },
+  "main": "dist/index.js",
   "scripts": {
-    "build": "npm run lint && npm run clean && tsc && npm run test",
+    "build": "tsc",
     "clean": "rimraf dist",
     "dev": "tsc --watch",
     "docs": "typedoc",
     "lint": "eslint -c .eslintrc.json src/**/*.ts",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "Express",
