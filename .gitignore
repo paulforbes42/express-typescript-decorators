@@ -1,5 +1,6 @@
 coverage/
 docs/
 node_modules/
+dist/
 *.swp
 *.swo
