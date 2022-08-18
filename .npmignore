@@ -1,4 +1,6 @@
+.github/
 example/
 src/
 test/
+coverage/
 jest.config.js
