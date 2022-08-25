@@ -1,3 +1,7 @@
+/**
+ * Content types consumed and returned by HTTP routes
+ * @enum
+ */
 export enum ContentType {
     ApplicationJson = 'application/json',
     ApplicationOctetStream = 'application/octet-stream',

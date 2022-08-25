@@ -90,6 +90,10 @@ export type OpenAPIExternalDocumentation = {
     url: string
 };
 
+/**
+ * Request parameter types
+ * @enum
+ */
 export enum OpenAPIParameterInList {
     Query = 'query',
     Header = 'header',

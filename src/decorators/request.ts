@@ -3,6 +3,7 @@ import RequestParameterMetadata from "../types/request-parameter-metadata";
 /**
  * Parameter decorator which injects the Express Request object into the decorated Express route
  * 
+ * @typeParam T - Class method to be registered with the Express application as a route
  * @example
  * ```
  * @Controller('/api', 'User', 'User Management Routes')

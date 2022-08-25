@@ -8,6 +8,7 @@ import RequestParameterMetadata from "../types/request-parameter-metadata";
  * @param exampleValue - example of expected data
  * @param required - indicate if this parameter is required
  * @param deprecated - indicate if this parameter is deprecated
+ * @typeParam T - Class method to be registered with the Express application as a route
  * @example
  * ```
  * @Controller('/api', 'User', 'User Management Routes')

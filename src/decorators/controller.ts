@@ -4,6 +4,7 @@
  * @param path - URL path to prefix all Express routes within the class
  * @param tag - OpenAPI grouping for all Express routes within the class
  * @param description - OpenAPI description that will be associated with the tag for this class
+ * @typeParam T - Class which has methods that are to be routes in the Express Application
  * @example
  * ```
  * @Controller('/api', 'User', 'User Management Routes')

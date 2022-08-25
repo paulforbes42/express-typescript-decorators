@@ -4,6 +4,7 @@
  * @param contentType - content type of payload i.e. "application/json"
  * @param description - description of the payload for OpenAPI documentation
  * @param required - indicate if the payload is required
+ * @typeParam T - Class method to be registered with the Express application as a route
  * @example
  * ```
  *  * @Controller('/api', 'User', 'User Management Routes')
