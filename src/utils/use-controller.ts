@@ -3,6 +3,7 @@ import path from 'path';
 import OpenAPIService from '../services/open-api';
 import HttpVerb from '../types/http-verb';
 import RequestParameterMetadata from '../types/request-parameter-metadata';
+import {OpenAPIParameterInList} from '../types/open-api-3-1-0';
 
 /**
  * Utility Method to map a controller class be used by Express
@@ -45,9 +46,9 @@ function useController(controller: any): Router {
                     input.push(res);
                 else if(param.mode === 'request')
                     input.push(req.body[param.key]);
-                else if(param.mode === 'query')
+                else if(param.mode === OpenAPIParameterInList.Query)
                     input.push(req.query[param.key]);
-                else if(param.mode === 'path')
+                else if(param.mode === OpenAPIParameterInList.Path)
                     input.push(req.params[param.key])
             })
 

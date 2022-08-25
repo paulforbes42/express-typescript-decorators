@@ -1,5 +1,6 @@
 import {Query} from '../src';
 import RequestParameterMetadata from '../src/types/request-parameter-metadata';
+import {OpenAPIParameterInList} from '../src/types/open-api-3-1-0';
 
 describe('Query Decorator', () => {
     const defineMetadataMock = jest.spyOn(Reflect, 'defineMetadata');
@@ -17,7 +18,7 @@ describe('Query Decorator', () => {
             exampleValue: 'A',
             type: 'String',
             required: true,
-            mode: 'query',
+            mode: OpenAPIParameterInList.Query,
         }];
         const cb = Query('a', 'Input A', 'A', true);
         cb(obj, 'fn', 0);
@@ -36,7 +37,7 @@ describe('Query Decorator', () => {
             exampleValue: 'A',
             type: 'String',
             required: true,
-            mode: 'query',
+            mode: OpenAPIParameterInList.Query,
         }]);
         getMetadataMock.mockReturnValueOnce([{name: 'String'}, {name: 'Number'}]);
         const mockData: RequestParameterMetadata[] = [{
@@ -45,14 +46,14 @@ describe('Query Decorator', () => {
             exampleValue: 'A',
             type: 'String',
             required: true,
-            mode: 'query',
+            mode: OpenAPIParameterInList.Query,
         }, {
             key: 'n',
             summary: 'Input N',
             exampleValue: 5,
             type: 'Number',
             required: false,
-            mode: 'query',
+            mode: OpenAPIParameterInList.Query,
         }];
         const cb = Query('n', 'Input N', 5, false);
         cb(obj, 'fn', 1);

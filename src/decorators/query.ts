@@ -1,4 +1,5 @@
-import RequestParameterMetadata from "../types/request-parameter-metadata";
+import RequestParameterMetadata from '../types/request-parameter-metadata';
+import {OpenAPIParameterInList} from '../types/open-api-3-1-0';
 
 /**
  * Parameter decorator which defines a query string parameter to be provided to the Express route
@@ -36,7 +37,7 @@ function Query<T>(key: string, summary?: string, exampleValue?: string | number 
             type: type[parameterIndex].name,
             required,
             deprecated,
-            mode: 'query',
+            mode: OpenAPIParameterInList.Query,
         };
 
         Reflect.defineMetadata('etd:requestParams', requestParams, target, propertyKey);

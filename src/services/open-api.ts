@@ -78,7 +78,7 @@ class OpenAPIService {
         const openAPIRequestBody: OpenAPIRequestBody = openAPIOperation.requestBody;
 
         requestParams.forEach(param => {
-            if(param.mode === 'system' || param.mode === 'query')
+            if(param.mode === 'system' || param.mode === OpenAPIParameterInList.Query || param.mode === OpenAPIParameterInList.Path)
                 return;
 
             if(!openAPIRequestBody.content[requestBody.contentType as ContentType])
@@ -117,7 +117,7 @@ class OpenAPIService {
 
     protected static addPathParamsToOperation(openAPIOperation: OpenAPIOperation, requestParams: RequestParameterMetadata[]): void {
         requestParams.forEach(param => {
-            if(param.mode !== 'query' && param.mode !== 'path')
+            if(param.mode !== OpenAPIParameterInList.Query && param.mode !== OpenAPIParameterInList.Path)
                 return;
 
             const pathParam: OpenAPIParameter = {
