@@ -1,5 +1,6 @@
 import {UrlParam} from '../src';
 import RequestParameterMetadata from '../src/types/request-parameter-metadata';
+import {OpenAPIParameterInList} from '../src/types/open-api-3-1-0';
 
 describe('UrlParam Decorator', () => {
     const defineMetadataMock = jest.spyOn(Reflect, 'defineMetadata');
@@ -17,7 +18,7 @@ describe('UrlParam Decorator', () => {
             exampleValue: 'A',
             type: 'String',
             required: true,
-            mode: 'path',
+            mode: OpenAPIParameterInList.Path,
         }];
         const cb = UrlParam('a', 'Input A', 'A');
         cb(obj, 'fn', 0);
@@ -36,7 +37,7 @@ describe('UrlParam Decorator', () => {
             exampleValue: 'A',
             type: 'String',
             required: true,
-            mode: 'path',
+            mode: OpenAPIParameterInList.Path,
         }]);
         getMetadataMock.mockReturnValueOnce([{name: 'String'}, {name: 'Number'}]);
         const mockData: RequestParameterMetadata[] = [{
@@ -45,14 +46,14 @@ describe('UrlParam Decorator', () => {
             exampleValue: 'A',
             type: 'String',
             required: true,
-            mode: 'path',
+            mode: OpenAPIParameterInList.Path,
         }, {
             key: 'n',
             summary: 'Input N',
             exampleValue: 5,
             type: 'Number',
             required: true,
-            mode: 'path',
+            mode: OpenAPIParameterInList.Path,
         }];
         const cb = UrlParam('n', 'Input N', 5);
         cb(obj, 'fn', 1);

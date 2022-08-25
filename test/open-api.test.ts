@@ -5,6 +5,7 @@ import {
     OpenAPIInfo,
     OpenAPIOperation,
     OpenAPIParameter,
+    OpenAPIParameterInList,
     OpenAPIRequestBody,
     OpenAPITag,
 } from '../src/types/open-api-3-1-0';
@@ -366,17 +367,25 @@ describe('OpenAPI Documentation Service', () => {
                 summary: 'First Input',
             },
             {
-                mode: 'query',
+                mode: OpenAPIParameterInList.Query,
                 key: 'test'
             },
             {
-                mode: 'path',
+                mode: OpenAPIParameterInList.Path,
                 key: 'inputB',
                 exampleValue: 'B',
                 type: 'string',
                 required: false,
                 summary: 'Second Input',
-            }
+            },
+            {
+                mode: 'request',
+                key: 'inputC',
+                exampleValue: 'C',
+                type: 'string',
+                required: false,
+                summary: 'Third Input',
+            },
         ];
         mockGetMetadata.mockReturnValueOnce(undefined); // etd:path -> controller       
         mockGetMetadata.mockReturnValueOnce(undefined); // etd:tags -> controller       
@@ -409,16 +418,18 @@ describe('OpenAPI Documentation Service', () => {
         expect(requestStruct.content['application/json']).toBeTruthy();
         expect(requestStruct.content['application/json']?.schema?.type).toBe('object');
         expect(requestStruct.content['application/json']?.schema?.example.inputA).toBe('A');
-        expect(requestStruct.content['application/json']?.schema?.example.inputB).toBe('B');
+        expect(requestStruct.content['application/json']?.schema?.example.inputB).toBeFalsy();
+        expect(requestStruct.content['application/json']?.schema?.example.inputC).toBe('C');
 
         expect(requestStruct.content['application/json']?.schema?.properties?.inputA.type).toBe('string');
-        expect(requestStruct.content['application/json']?.schema?.properties?.inputB.type).toBe('string');
+        expect(requestStruct.content['application/json']?.schema?.properties?.inputB).toBeFalsy();
+        expect(requestStruct.content['application/json']?.schema?.properties?.inputC.type).toBe('string');
 
         expect(requestStruct.content['application/json']?.schema?.required?.length).toBe(1);
         expect(requestStruct.content['application/json']?.schema?.required).toStrictEqual(['inputA']);
     });
     
-    test('should add a request body to an OpenAPIPath', () => {
+    test('should add a request body to an OpenAPIPath 2', () => {
         const requestParams: RequestParameterMetadata[] = [
             {
                 mode: 'system',
@@ -433,7 +444,7 @@ describe('OpenAPI Documentation Service', () => {
                 summary: 'First Input',
             },
             {
-                mode: 'query',
+                mode: OpenAPIParameterInList.Query,
                 key: 'test',
                 exampleValue: 'A',
                 type: 'string',
@@ -441,7 +452,7 @@ describe('OpenAPI Documentation Service', () => {
                 summary: 'First Query',
             },
             {
-                mode: 'query',
+                mode: OpenAPIParameterInList.Query,
                 key: 'inputB',
                 exampleValue: 'B',
                 type: 'string',
