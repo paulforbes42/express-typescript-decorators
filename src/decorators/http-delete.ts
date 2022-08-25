@@ -4,6 +4,7 @@ import HttpVerb from "../types/http-verb";
  * Method decorator that indicates the method should be accessible through an HTTP Delete operation
  * @param path - URL which this method should be access through as a HTTP Delete operation
  * @param description - Description of this route to be included in the OpenAPI documentation
+ * @typeParam T - Class method to be registered with the Express application as a delete route
  * @example
  * ```
  * @Controller('/api', 'User', 'User Management Routes')

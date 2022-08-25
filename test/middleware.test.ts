@@ -7,10 +7,9 @@ describe('Middleware Decorator', () => {
         const obj = {
             fn: jest.fn()
         };
-        const mockMiddleware = jest.fn();
+        const mockMiddleware = jest.fn()
         const mw = [mockMiddleware];
 
-        // @ts-ignore
         const cb = Middleware(mw);
         cb(obj, 'fn');
 

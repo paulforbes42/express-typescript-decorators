@@ -6,6 +6,7 @@ import HttpStatus from "../types/http-status";
  * 
  * @param statusCode - HTTP status code
  * @param description - Description of the scenario in which this HTTP status code will be produced
+ * @typeParam T - Class method to be registered with the Express application as a route
  * @example
  * ```
  * @Controller('/api', 'User', 'User Management Routes')
