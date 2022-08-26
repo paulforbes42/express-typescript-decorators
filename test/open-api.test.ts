@@ -7,6 +7,7 @@ import {
     OpenAPIParameter,
     OpenAPIParameterInList,
     OpenAPIRequestBody,
+    OpenAPIResponse,
     OpenAPITag,
 } from '../src/types/open-api-3-1-0';
 import RequestParameterMetadata from '../src/types/request-parameter-metadata';
@@ -310,7 +311,7 @@ describe('OpenAPI Documentation Service', () => {
 
     test('should add http responses to an OpenAPIPath', () => {
         const httpStatus: HttpStatus[] = [
-            {statusCode: 200, description: 'Success'},
+            {statusCode: 200, description: 'Success', contentType: 'application/json', example: 'test'},
             {statusCode: 401, description: 'Forbidden'},
         ];
 
@@ -344,7 +345,87 @@ describe('OpenAPI Documentation Service', () => {
         if(!getOperation.responses)
             return;
 
-        expect(getOperation.responses['200']).toStrictEqual({description: 'Success'});
+        const openAPIResponse: OpenAPIResponse = getOperation.responses['200'] as OpenAPIResponse;
+
+        expect(openAPIResponse).toBeTruthy();
+
+        if(!openAPIResponse)
+            return;
+
+        expect(openAPIResponse.content).toBeTruthy();
+
+        if(!openAPIResponse.content)
+            return;
+
+        expect(getOperation.responses['200'].description).toBe('Success');
+        expect(openAPIResponse.content['application/json']).toBeTruthy();
+        expect(openAPIResponse.content['application/json'].schema).toBeTruthy();
+
+        if(!openAPIResponse.content['application/json'].schema)
+            return;
+
+        expect(openAPIResponse.content['application/json'].schema.type).toBe('string');
+        expect(openAPIResponse.content['application/json'].example).toBe('test');
+        expect(getOperation.responses['401']).toStrictEqual({description: 'Forbidden'});
+    });
+
+    test('should handle http responses with example arrays', () => {
+        const httpStatus: HttpStatus[] = [
+            {statusCode: 200, description: 'Success', contentType: 'application/json', example: ['test']},
+            {statusCode: 401, description: 'Forbidden'},
+        ];
+
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:path -> controller       
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:tags -> controller       
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:description -> controller       
+        mockGetMetadata.mockReturnValueOnce('get'); // etd:verb -> method
+        mockGetMetadata.mockReturnValueOnce('/api-path'); // etd:path -> method
+        mockGetMetadata.mockReturnValueOnce(httpStatus); // etd:httpStatus -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:routeDescription -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:requestBody -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:requestParams -> method
+
+        var obj = {
+            fn: jest.fn()
+        };
+        OpenAPIService.handleRoute(obj, obj, 'fn');
+
+        const route = OpenAPIService.getOpenAPIJson();
+        const mockReq: any = {};
+        const mockRes: any = {
+            send: jest.fn()
+        };
+
+        route(mockReq, mockRes);
+        const responseBody = mockRes.send.mock.calls[0][0];
+        const getOperation: OpenAPIOperation = responseBody.paths['/api-path'].get;
+
+        expect(getOperation.responses).toBeTruthy();
+
+        if(!getOperation.responses)
+            return;
+
+        const openAPIResponse: OpenAPIResponse = getOperation.responses['200'] as OpenAPIResponse;
+
+        expect(openAPIResponse).toBeTruthy();
+
+        if(!openAPIResponse)
+            return;
+
+        expect(openAPIResponse.content).toBeTruthy();
+
+        if(!openAPIResponse.content)
+            return;
+
+        expect(getOperation.responses['200'].description).toBe('Success');
+        expect(openAPIResponse.content['application/json']).toBeTruthy();
+        expect(openAPIResponse.content['application/json'].schema).toBeTruthy();
+
+        if(!openAPIResponse.content['application/json'].schema)
+            return;
+
+        expect(openAPIResponse.content['application/json'].schema.type).toBe('array');
+        expect(openAPIResponse.content['application/json'].example).toStrictEqual(['test']);
         expect(getOperation.responses['401']).toStrictEqual({description: 'Forbidden'});
     });
 
@@ -546,6 +627,37 @@ describe('OpenAPI Documentation Service', () => {
             name: 'test',
             description: 'test description'
         });
+    });
+
+    test('should capture security for a route', () => {
+        const security = [{"bearerAuth":[]}];
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:path -> controller       
+        mockGetMetadata.mockReturnValueOnce('test'); // etd:tags -> controller       
+        mockGetMetadata.mockReturnValueOnce('test description'); // etd:description -> controller       
+        mockGetMetadata.mockReturnValueOnce('get'); // etd:verb -> method
+        mockGetMetadata.mockReturnValueOnce('/api-path'); // etd:path -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:httpStatus -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:routeDescription -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:requestBody -> method
+        mockGetMetadata.mockReturnValueOnce(undefined); // etd:requestParams -> method
+        mockGetMetadata.mockReturnValueOnce(security) // etd:security -> method
+
+        var obj = {
+            fn: jest.fn()
+        };
+        OpenAPIService.handleRoute(obj, obj, 'fn');
+
+        const route = OpenAPIService.getOpenAPIJson();
+        const mockReq: any = {};
+        const mockRes: any = {
+            send: jest.fn()
+        };
+
+        route(mockReq, mockRes);
+        const responseBody = mockRes.send.mock.calls[0][0];
+        const operation = responseBody.paths['/api-path'].get;
+        expect(operation.security).toBeTruthy();
+        expect(operation.security).toStrictEqual(security);
     });
 
 });

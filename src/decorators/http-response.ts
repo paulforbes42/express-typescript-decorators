@@ -25,12 +25,14 @@ import HttpStatus from "../types/http-status";
  * }
  * ```
  */
-function HttpResponse<T>(statusCode: number, description: string): (target: T, propertyKey: string) => void {
+function HttpResponse<T>(statusCode: number, description: string, contentType?: string, example?: any): (target: T, propertyKey: string) => void {
     return function(target: T, propertyKey: string): void {
         const statuses: HttpStatus[] = Reflect.getMetadata('etd:httpStatus', target, propertyKey) || [];
         statuses.push({
             statusCode, 
-            description
+            description,
+            contentType,
+            example,
         });
         Reflect.defineMetadata('etd:httpStatus', statuses, target, propertyKey);
     }

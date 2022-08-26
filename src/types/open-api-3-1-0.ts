@@ -81,7 +81,7 @@ export type OpenAPIOperation = {
     responses?: OpenAPIResponses
     callbacks?: OpenAPICallback | OpenAPIReference
     deprecated?: boolean
-    security?: OpenAPISecurityScheme
+    security?: OpenAPISecurityRequirement[]
     servers?: OpenAPIServers[]
 };
 
@@ -147,7 +147,9 @@ export type OpenAPIResponses = {
 export type OpenAPIResponse = {
     description: string
     headers?: OpenAPIHeader | OpenAPIReference
-    content?: OpenAPIMediaType
+    content?: {
+        [key: string]: OpenAPIMediaType
+    }
     links?: OpenAPILink | OpenAPIReference
 };
 

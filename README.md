@@ -141,7 +141,12 @@ import {
 class UserController {
 
     @RequestBody('application/json', 'POST Body that contains all information required to create a user', true)
-    @HttpResponse(201, 'User Created Successfully')
+    @HttpResponse(201, 'User Created Successfully', 'application/json', {
+      id: 123,
+      firstName: "Paul",
+      lastName: "Forbes",
+      email: "paulforbes42@gmail.com"
+    })
     @HttpResponse(400, 'Failed to create user')
     @HttpPost('/user', 'Create a new user for the system')
     async createUser(
@@ -394,8 +399,12 @@ This decorator can be applied multiple times to a single Express route to descri
 ```
 @Controller('/api', 'User', 'User Management Routes')
 class User {
-
- @HttpResponse(201, 'New user record created')
+ @HttpResponse(201, 'New user record created', 'application/json', {
+   id: 123,
+   firstName: "Paul",
+   lastName: "Forbes",
+   email: "paulforbes42@gmail.com"
+ })
  @HttpResponse(400, 'Missing required data')
  @HttpPost('/user', 'Create a new user')
  async createUser(
@@ -419,7 +428,7 @@ ___
 
 ### Middleware
 
-▸ **@Middleware**<`T`\>(`middleware`)
+▸ **@Middleware**<`T`\>(`middleware`, `security?`)
 
 Method decorator which accepts an array of Express middleware callback functions to run prior to the Express route being executed
 
@@ -429,7 +438,7 @@ Method decorator which accepts an array of Express middleware callback functions
 @Controller('/api', 'User', 'User Management Routes')
 class User {
 
- @Middleware([verifyAuthenticated, checkAdminPermissions])
+ @Middleware([verifyAuthenticated, checkAdminPermissions], [{"bearerAuth":[]}])
  @HttpPost('/user', 'Create a new user')
  async createUser(
    @RequestParam('username') username: string,
@@ -445,7 +454,8 @@ class User {
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `middleware` | (`req`: `Request`<`ParamsDictionary`, `any`, `any`, `ParsedQs`, `Record`<`string`, `any`\>\>, `res`: `Response`<`any`, `Record`<`string`, `any`\>\>, `next?`: `NextFunction`) => `void`[] | Array of Express middleware callback functions |
+| `middleware` | MiddlewareFunction[] | Array of Express middleware callback functions |
+| `security?` | OpenAPISecurityRequirement[] | Array of security requirement objects.  Must match one item in the `securitySchemes` in `OpenAPI.json`
 
 ___
 

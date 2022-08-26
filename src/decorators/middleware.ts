@@ -1,4 +1,5 @@
 import {MiddlewareFunction} from '../types/middleware-function';
+import {OpenAPISecurityRequirement} from '../types/open-api-3-1-0';
 
 /**
  * Method decorator which accepts an array of Express middleware callback functions to run prior to the Express route being executed
@@ -10,7 +11,7 @@ import {MiddlewareFunction} from '../types/middleware-function';
  * @Controller('/api', 'User', 'User Management Routes')
  * class User {
  * 
- *  @Middleware([verifyAuthenticated, checkAdminPermissions])
+ *  @Middleware([verifyAuthenticated, checkAdminPermissions], [{ "bearerAuth": [] }])
  *  @HttpPost('/user', 'Create a new user')
  *  async createUser(
  *    @RequestParam('username') username: string,
@@ -22,9 +23,12 @@ import {MiddlewareFunction} from '../types/middleware-function';
  * }
  * ```
  */
-function Middleware<T>(middleware: MiddlewareFunction[]): (target: T, propertyKey: string) => void {
+function Middleware<T>(middleware: MiddlewareFunction[], security?: OpenAPISecurityRequirement[]): (target: T, propertyKey: string) => void {
     return function(target: T, propertyKey: string): void {
         Reflect.defineMetadata('etd:middleware', middleware, target, propertyKey);
+
+        if(security)
+            Reflect.defineMetadata('etd:security', security, target, propertyKey);
     }
 }
 

@@ -13,6 +13,7 @@ import {
     OpenAPITag,
     OpenAPIParameter,
     OpenAPIParameterInList,
+    OpenAPISecurityRequirement,
 } from '../types/open-api-3-1-0';
 import ContentType from '../types/content-type';
 import HttpStatus from '../types/http-status';
@@ -31,7 +32,14 @@ class OpenAPIService {
             version: "1"
         }
     };
-    
+ 
+    protected static getVariableType(variable: unknown): string {
+        if(Array.isArray(variable))
+            return 'array';
+
+        return typeof variable;
+    }
+   
     protected static getOpenAPIPath(path: string): OpenAPIPathItem {
         const openAPIData = this.openAPIData;
 
@@ -64,6 +72,19 @@ class OpenAPIService {
             const openAPIResponse: OpenAPIResponse = openAPIOperation.responses[status.statusCode] as OpenAPIResponse;
 
             openAPIResponse.description = status.description;
+
+            if(status.contentType) {
+                openAPIResponse.content = {};
+                openAPIResponse.content[status.contentType] = {};
+
+                if(status.example) {
+                    const openAPIMediaType: OpenAPIMediaType = openAPIResponse.content[status.contentType];
+                    openAPIMediaType.schema = {
+                        type: this.getVariableType(status.example)
+                    };
+                    openAPIMediaType.example = status.example;
+                }
+            }
         });
 
         return openAPIOperation;
@@ -195,11 +216,15 @@ class OpenAPIService {
         const routeDescription: string = Reflect.getMetadata('etd:routeDescription', controllerInstance, methodName);
         const requestBody = Reflect.getMetadata('etd:requestBody', controllerInstance, methodName);
         const requestParams: RequestParameterMetadata[] = Reflect.getMetadata('etd:requestParams', controllerInstance, methodName) || [];
+        const security: OpenAPISecurityRequirement[] = Reflect.getMetadata('etd:security', controllerInstance, methodName);
 
         const fullPath = path.posix.join(controllerPath || '', routePath);
         const openAPIPath: OpenAPIPathItem = this.getOpenAPIPath(fullPath);
         
         const openAPIOperation = this.addHttpVerbToPathItem(openAPIPath, httpVerb, httpStatus, routeDescription, controllerTags);
+
+        if(security)
+            openAPIOperation.security = security;
 
         if(requestBody)
             this.addRequestBodyToOperation(openAPIOperation, requestBody, requestParams);
