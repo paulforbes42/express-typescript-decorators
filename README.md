@@ -4,6 +4,11 @@ Create Express APIs using TypeScript decorators that naturally generate OpenAPI 
 
 [![codecov](https://codecov.io/gh/paulforbes42/express-typescript-decorators/branch/master/graph/badge.svg?token=6A0MACS1AQ)](https://codecov.io/gh/paulforbes42/express-typescript-decorators)
 
+## Working Example
+
+See a working example of `express-typescript-decorators`
+[User Management](https://github.com/paulforbes42/user-management)
+
 ## Overview
 
 * Create classes whose methods represent Express routes
